@@ -14,7 +14,7 @@ VERSION = '0.0.1dev'
 
 # What packages are required for this module to be executed?
 REQUIRED = [
-    'click', 'ublox'
+    'click==7.0', 'pyserial==3.4', "tabulate==0.8.7"
 ]
 
 # What packages are optional?
