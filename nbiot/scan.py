@@ -120,3 +120,15 @@ def reboot(app_ctx):
     click.echo(click.style(f"Rebooting module {module}...", fg="red", bold=True))
     module.reboot()
     click.echo(click.style(f"Module rebooted", fg="red", bold=True))
+
+
+@click.command()
+@click.pass_obj
+def send(app_ctx):
+    module: SaraN211Module = app_ctx.module
+    connect_module(module, app_ctx)
+    click.echo(click.style(f"Sending data to test", fg="blue"))
+    sock = module.create_socket(port=5000)
+    sock.sendto(b"testtesttesttesttesttesttesttesttest", ("172.16.43.123", 2883))
+    # TODO: Remove socket from module!
+    click.echo(click.style(f"Data sent", fg="blue"))
