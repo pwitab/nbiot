@@ -2,7 +2,7 @@ import logging
 from logging.config import DictConfigurator
 
 import click
-from .scan import connect, ping, stats, reboot, send
+from .scan import connect, ping, stats, reboot
 import serial
 from .module import SaraN211Module
 
@@ -18,11 +18,11 @@ class AppContext:
 
 
 @click.group()
-@click.option("--port", "-p", help="Register the serial port to use")
+@click.option("--port", "-p", help="Serial port to use")
 @click.option(
     "--roaming/--home-network",
     default=True,
-    help="Indicate if the MNO is using home network or roaming status",
+    help="Indicate if the SIM is using home network or roaming status",
 )
 @click.option(
     "--mno",
@@ -41,12 +41,17 @@ class AppContext:
 @click.pass_context
 def cli(ctx, port, roaming, mno, loglevel, psm, apn):
     """
-    This is a NB IoT Scanner software built by Palmlund Wahlgren Innovative
-    Technology AB in Sweden for use in finding problems and evaluating network
+    This is a NB-IoT scanner tool made for finding problems and evaluating network
     coverage in smart meter rollouts.
 
-    You will need a Ublox NB-IoT module (SARA N211 for
-    example) connected via a serial interface, like USB.
+    Built by Palmlund Wahlgren Innovative Technology AB in Sweden. We offer it as a part
+    of our free tooling for customers of our AMR solution, Utilitarian. https://www.utilitarian.io
+
+    But it can of course be used by anyone wanting to analyse coverage and finding
+    problems in IoT solutions based on NB-IoT.
+
+    You will need a Ublox SARA N211 NB-IoT module connected via a serial interface,
+    like USB.
     """
     logging.config.dictConfig(
         {
@@ -76,7 +81,7 @@ def cli(ctx, port, roaming, mno, loglevel, psm, apn):
     except serial.serialutil.SerialException as e:
         serial_error_nr_map = {
             16: (
-                f"Resource busy. Are you sure no " f"other process is using port {port}"
+                f"Resource busy. Are you sure no other process is using port {port}"
             )
         }
 
@@ -98,4 +103,3 @@ cli.add_command(connect)
 cli.add_command(ping)
 cli.add_command(stats)
 cli.add_command(reboot)
-cli.add_command(send)
