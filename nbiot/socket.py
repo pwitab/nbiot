@@ -1,9 +1,7 @@
-import time
 import binascii
 
 
 class UbloxSocket:
-
     def __init__(self, socket_id, module, source_port=None):
         self.socket_id = socket_id
         self.module = module
@@ -28,10 +26,10 @@ class UbloxSocket:
 
 
 class UDPSocket(UbloxSocket):
-
     def sendto(self, bytes, address):
-        self.module.send_udp_data(socket=self.socket_id, host=address[0],
-                                  port=address[1], data=bytes.decode())
+        self.module.send_udp_data(
+            socket=self.socket_id, host=address[0], port=address[1], data=bytes
+        )
         self.able_to_receive = True
 
     def bind(self, address):
@@ -49,9 +47,11 @@ class UDPSocket(UbloxSocket):
         result.
         """
         if not self.able_to_receive:
-            raise IOError('The ublox socket cannot receive data yet. Either '
-                          'set the socket to listening via .bind() or write '
-                          'once on the socket.')
+            raise IOError(
+                "The ublox socket cannot receive data yet. Either "
+                "set the socket to listening via .bind() or write "
+                "once on the socket."
+            )
 
         result = self.module.read_udp_data(socket=self.socket_id, length=bufsize)
         if result:
@@ -61,4 +61,3 @@ class UDPSocket(UbloxSocket):
             return data, address
         else:
             return None
-
